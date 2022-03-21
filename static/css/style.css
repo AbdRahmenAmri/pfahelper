@@ -1,0 +1,625 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    overflow-wrap: break-word;
+
+}
+
+
+
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    display: grid;
+    place-items: center;
+
+
+}
+
+
+
+
+section{
+    width: 100vw;
+    height: 100vh;
+}
+
+section nav{
+    z-index: 11;
+    width: 15vw;
+    height: 100vh;
+    position: fixed;
+    display: grid;
+    place-items: center;
+    background-color: #3f3f3f;
+    border-radius: 0 10px 10px 0;
+}
+
+section nav ul{
+    height: 60vh;
+    list-style: none;
+    text-align: start;
+
+}
+section nav ul a{
+    cursor: pointer;
+    text-decoration: none;
+}
+section nav li{
+    padding: 2.5vh;
+    text-decoration: none;
+    margin: 4vh;
+    background-color: rgb(200, 37, 0);
+    font-size: .9em;
+    color: #f1f1f1;
+    letter-spacing: 3px;
+    border-radius: 8px;
+
+}
+section nav li#logout{
+    background-color: #000;
+    margin-top: 15vh;
+}
+section .main{
+    background-color: #1f1f1f;
+    width: 100vw;
+    padding-left: 20vw;
+    padding-top: 5vh;
+    min-height: 100vh;
+
+}
+section .main header{
+    display: flex;
+    width: 100%;
+    border-bottom: 3px solid rgb(200, 37, 0);
+    justify-content: space-between;
+    align-items: center;
+}
+section .main header h1{
+    letter-spacing: 5px;
+    color: rgb(200, 37, 0);
+    text-transform: uppercase;
+}
+
+section .main header a{
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-right: 10vw;
+    background-color: red;
+    color: #fff;
+    border-radius: 10px;
+    margin-bottom: 3vh;
+}
+
+section .main .contents{
+    padding: 5vh;
+}
+
+section .main .content{
+    display: grid;
+    padding: 5vh;
+    grid-template-columns: repeat(3,300px);
+    grid-auto-flow: dense;
+    grid-gap: 20px;
+
+}
+
+.content .box{
+    position: relative;
+    cursor: pointer;
+    width: 300px;
+    height: 180px;
+    background-color: #8f8f8f;
+    border-radius: 10px 10px 0 0;
+    padding: 12px;
+    border-bottom: 10px solid var(--box-color);
+    box-sizing: border-box;
+}
+.box.plus{
+    grid-column: 1/2;
+    border-bottom: 10px solid #fff;
+    display: grid;
+    place-items: center;
+    font-size: 6em;
+    color: #fff;
+    transition: .5s;
+}
+
+
+
+.box.plus.toggle{
+    position: absolute;
+    width: 600px;
+    height: 400px;
+    background-color: #f1f1f1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 12;
+    box-shadow: 0 0 50px rgba(0, 0, 0,1);
+    border-radius: 10px;
+    transition: .5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.box.plus #plus-msg{
+    margin-left: 35%;
+    margin-top: -5vh;
+    font-size: 16px;
+    color: red;
+}
+.box .desc{
+    position: relative;
+    width: 100%;
+    height: 60%;
+    color: #ddd;
+    font-size: .8em;
+    overflow: hidden;
+    padding-bottom: 5vh;
+    box-sizing: border-box;
+    border-bottom: 2px solid rgb(200, 37, 0);
+}
+
+.box .title{
+    position: relative;
+    font-size: 1em;
+    letter-spacing: 2px;
+    color: rgb(200, 37, 0);
+    margin-top: 2vh;
+}
+.box .details{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.box .details label{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: .5em;
+}
+
+.box .details span{
+    color: #3f3f3f;
+    font-size: 1.1em;
+}
+.main-sprint{
+    position: relative;
+    width: 75vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid var(--box-color);
+    padding-left: 2vw;
+}
+
+.main-sprint h1{
+    color: rgb(200, 37, 0);
+    font-size: 1.2em;
+    letter-spacing: 2px;
+}
+.main-sprint p{
+    color: #afafaf;
+    font-size: .8em;
+    letter-spacing: 1px;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.main-sprint .left{
+    width: 60%;
+}
+
+.main-sprint .right{
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-sprint .right div ul{
+    list-style: none;
+    font-size: .6em;
+    color: rgba(255, 255, 255, 0.3);
+}
+.main-sprint .right div ul li{
+    padding-top: 10px;
+}
+
+.main-sprint .right div ul li span{
+    font-size: 1.2em;
+    color: #afafaf;
+}
+
+.box.plus #exit{
+    color: red;
+    font-size: .2em;
+    padding: 7px 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.box.plus form{
+    display: none;
+    place-items: center;
+}
+.box.plus fieldset{
+    
+    border: 2px solid red;
+    width: 570px;
+    height: 330px;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 5vh;
+}
+.box.plus legend{
+    font-size: .3em;
+    text-transform: uppercase;
+    color: #1f1f1f;
+}
+
+.box.plus fieldset input,.box.plus fieldset textarea{
+    margin-bottom: 10px;
+}
+
+.task-details{
+    position: absolute;
+    visibility: hidden;
+    overflow: hidden;
+    top: 0;
+    right: -90%;
+    width: 85%;
+    height: 100vh;
+    background-color: #afafaf;
+    padding: 20px;
+    z-index: 13;
+    border-radius: 10px;
+    transition: .5s ease-in;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 100px min-content min-content auto;
+    grid-template-areas:    "close title title"
+                            "desc desc details"
+                            "ctrlr ctrlr ctrlr"
+                            "comments comments comments";
+
+}
+
+.task-details.toggle{
+    right: 0;
+    visibility: visible;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+.task-details #task-close{
+    grid-area: close;
+    position: fixed;
+    color: red;
+    height: 50px;
+    width: 50px;
+    font-size: 1.5em;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.task-details h1{
+    justify-self: start;
+    font-size: 1.8em;
+    text-transform: capitalize;
+    color: rgb(200, 37, 0);
+    margin-top: 10px;
+    grid-area: title;
+}
+.task-details p{
+    grid-area: desc;
+    width: 80%;
+    justify-self: center;
+    font-size: 1em;
+    letter-spacing: 1px;
+    color: #1f1f1f;
+    border-left: 5px solid var(--box-color);
+    padding-left: 15px;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.task-details .details{
+
+    grid-area: details;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: fit-content;
+    justify-self: start;
+    height: fit-content;
+    font-size: .7em;
+    color: #f1f1f1;
+    padding: 25px;
+    border: 1px #3f3f3f solid ;
+    border-radius: 10px;
+    background-color: #1f1f1f;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+
+}
+
+.task-details .details label,.task-details .details span{
+    text-transform: capitalize;
+}
+.task-details #ctrlr{
+    grid-area: ctrlr;
+    display: flex;
+    width: 40%;
+    justify-self: center;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+}
+.task-details #ctrlr a{
+    padding: 2.5vh;
+    text-decoration: none;
+    margin: 4vh;
+    background-color: rgb(200, 37, 0);
+    font-size: .9em;
+    color: #f1f1f1;
+    letter-spacing: 3px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.task-details .comments{
+    grid-area: comments;
+    width: 70vw;
+    justify-self: center;
+    display: grid;
+    margin-top: 25px;
+    grid-template-columns: auto;
+    border-top: 3px solid #1f1f1f;
+    padding-top: 20px;
+    padding-bottom: 5vh;
+
+
+}
+
+.task-details .comments .post{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-details .comments #comment{
+    width: 80%;
+    background-color: #222222;
+    border-radius: 12px;
+    border: none;
+    padding: 20px;
+    resize: none;
+    font-size: .8em;
+    color: #f1f1f1;
+    grid-column-end: auto;
+}
+.task-details .comments #post{
+    cursor: pointer;
+    width: 90px;
+    height: 50px;
+    align-self: center;
+    justify-self: center;
+    background-color: rgb(200, 37, 0);
+    color: #f1f1f1;
+    display: grid;
+    place-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 1.1em;
+}
+
+.task-details .comments .comment{
+    width: 70vw;
+    background-color: #1f1f1f;
+    margin-top: 20px;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+
+}
+.task-details .comments .comment #del{
+    position: absolute;
+    cursor: pointer;
+    align-self: flex-end;
+    border-radius: 10px;
+    padding: 7px 13px;
+    background-color: red;
+    color: #fff;
+    font-size: 18px;
+}
+
+.task-details .comments .comment #poster{
+    color: #f1f1f1;
+    font-size: 1.2em;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+}
+
+.task-details .comments .comment #c-date{
+    color: rgba(255, 255, 255, 0.5);
+    font-size: .6em;
+    margin-top: -6px;
+}
+
+.task-details .comments .comment #c-body{
+    box-sizing: border-box;
+    word-wrap: break-word;
+    margin-top: 10px;
+    padding: 0;
+    border: none;
+    font-size: .8em;
+    color: #f1f1f1;
+    letter-spacing: 1px;
+    width: 100%;
+}
+
+
+
+.main.login{
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 90%;
+    height: 80vh;
+    background: linear-gradient(45deg,rgb(200, 37, 0),rgb(200, 0, 0));
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+
+.main.login .desc{
+    color: #f1f1f1;
+    font-size: 1.1em;
+    margin: 10vw;
+    display: flex;
+    flex-direction: column;
+}
+.main.login .desc p{
+    width: 400px;
+    color: rgba(220, 220, 220, .8);
+    font-size: .8em;
+}
+
+.main.login .desc #sig{
+    cursor: pointer;
+    padding: 12px 20px;
+    color: rgb(200, 37, 0);
+    background-color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 30px;
+    width: max-content;
+    align-self: center;
+    justify-self: center;
+
+}
+
+.main.login .sign{
+    width: 35vw;
+    height: 90vh;
+    background-color: #f1f1f1;
+    position: absolute;
+    right: 10vw;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,.5);
+}
+
+.main.login .sign form{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+}
+
+.main.login .sign form h2{
+    text-transform: uppercase;
+    align-self: center;
+    font-size: 2em;
+    color: rgb(200, 0, 0);
+    letter-spacing: 2px;
+}
+.main.login .sign form label{
+    color: rgba(0, 0, 0, .7);
+    transform: translateY(35px);
+    margin-left: 10px;
+    font-size: .8em;
+    letter-spacing: 1px;
+}
+.main.login .sign form input{
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(220, 220, 220, .8);
+    padding-left: 10px;
+    font-size: .9em;
+    letter-spacing: 1px;
+    color: rgba(0, 0, 0, .7);
+    margin-top: 20px;
+
+
+}
+
+.main.login .sign form #submit{
+    cursor: pointer;
+    background-color: rgb(200, 37, 0);
+    margin-top: 20px;
+    font-size: 1em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #f1f1f1;
+}
+.main.login .sign form #submit:hover{
+    transform: scale(.99);
+}
+
+.container{
+    position: absolute;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 60%;
+    right: 12%;
+    height: 100vh;
+    overflow: hidden;
+    padding: 2vh;
+}
+
+.container .user-box{
+    cursor: pointer;
+    margin:2vh;
+    display: flex;
+    width: 200px;
+    height: 250px;
+    background-position: t;
+    background-repeat: no-repeat;
+    background-size: 100% 84%;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-top: 0;
+}
+.container .user-box h1{
+    align-self: flex-end;
+    text-transform: capitalize;
+    font-size: 1em;
+    background-color: rgb(200, 37, 0);
+    width: 100%;
+    padding: 7px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #fff;
+    min-height: 40px;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+}
+
+#teams{
+    overflow: hidden;
+}

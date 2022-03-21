@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOME | PFA GROUP 4 TRACKER</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% if login or signup %}
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.16.0/js/md5.min.js"></script>
+  {% endif %}
+  {% if not (login or signup) %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+  {% endif %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    var scrollPos = [0, 0];
+    getScroll = function () {
+      if (window.pageYOffset != undefined) {
+        return [pageXOffset, pageYOffset];
+      } else {
+        var sx, sy, d = document,
+          r = d.documentElement,
+          b = d.body;
+        sx = r.scrollLeft || b.scrollLeft || 0;
+        sy = r.scrollTop || b.scrollTop || 0;
+        return [sx, sy];
+      }
+    }
+  </script>
+</head>
+
+<body ng-app="task" ng-controller="task_ctrl">
+{% if data_type == 'user' %}
+  <section id="teams">
+    <nav>
+      <ul>
+        <a href="/">
+          <li>SPRINTS</li>
+        </a><a href="/teams">
+          <li>TEAMS</li>
+        </a><a href="https://github.com/AbdRahmenAmri/PFA" target="_blank">
+          <li>GITHUB</li>
+        </a>
+        <a>
+          <li id="logout">LOGOUT</li>
+        </a>
+      </ul>
+    </nav>
+    <div class="main">
+    {% if sprintuser or taskuser or taskss%}
+      <header>
+        <h1>{{header}}</h1>
+      </header>
+    {% endif %}
+    {% if teams %}
+      <div class="container">
+        {% for user in teams %}
+        <div class="user-box" ng-click="userClick({{user.id}})" style="background-image: url({{user.id | picdev}});">
+          <h1>{{user.name}}</h1>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if sprintuser or taskuser %}
+      <div class="content">
+      {% for sprint in sprintuser %}
+        <div class="box" box-data-id="{{sprint.id}}" style="--box-color:{{sprint.id | clr('id')}}"
+          ng-click="clickBox({{sprint.id}})">
+          <p class="desc">{{sprint.sprint_desc}}</p>
+          <h2 class="title">
+            {{sprint.sprint_name}}
+          </h2>
+          <div class="details">
+            <div class="info">
+              <label for="progress">progress : </label><span id="progress">{{sprint.id | calc_prog}}%</span>
+            </div>
+            <div class="info">
+              <label for="endin">Ends in (days) : </label><span id="endin">{{ sprint.sprint_estm }}</span>
+            </div>
+            <div class="info">
+              <label for="rank">rank : </label><span id="rank">{{ sprint.sprint_rank }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if sprint %}
+
+      <div class="task-details" data-task-id="{{'{{task.task_id}}'}}">
+        <span id="task-close" ng-click="closeTask()"> X </span>
+        <h1>{{'{{task.task_name}}'}}</h1>
+        <p style="--box-color:{{'{{task.task_color}}'}}">
+          {{'{{task.task_desc}}'}}
+        </p>
+        <div class="details">
+          <label for="rank">Rank : </label><span id="rank">{{'{{task.task_rank}}'}}</span>
+          <label for="estm">Estimation (days) : </label><span id="owner">{{'{{task.task_estm}}'}}</span>
+          <label for="owner">Owner : </label><span id="owner">{{'{{task.task_owner}}'}}</span>
+          <label for="state">State : </label><span id="state">{{'{{task.task_state.text}}'}}</span>
+          <label for="created">Add At : </label><span id="created">{{'{{task.task_created_at}}'}}</span>
+          <label for="Started" ng-if="task.task_started">Started At : </label><span id="started"
+            ng-if="task.task_started">{{'{{task.task_started_at}}'}}</span>
+          <label for="finished" ng-if="task.task_finished">finished at: </label><span id="finished"
+            ng-if="task.task_finished">{{'{{task.task_finished_at}}'}}</span>
+        </div>
+        <div class="comments">
+          <div class="post">
+            <textarea name="comment" id="comment" placeholder="Comment here..."></textarea>
+            <a id="post" ng-click="addComment()">Post</a>
+          </div>
+          <div class="comment" ng-repeat="x in data">
+            <span id="del" ng-if="x.CanDel" ng-click="delComment(x.id_comment)">X</span>
+            <span id="poster">{{'{{x.poster}}'}}</span>
+            <span id="c-date">{{'{{x.post_date}}'}}</span>
+            <p id="c-body">{{'{{x.comment}}'}}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contents">
+        <div class="main-sprint" style="--box-color:{{sprint.id| clr('id')}}">
+          <div class="left">
+            <h1>{{ sprint.sprint_name }}</h1>
+            <p>{{ sprint.sprint_desc }}</p>
+          </div>
+          <div class="right">
+            <div>
+              <ul>
+                <li>
+                  <label for="addat">ADD AT : </label><span id="addat">{{sprint.sprint_create_at|fdate}}</span>
+                </li>
+                <li>
+                  <label for="progress">progress : </label><span id="progress">{{ sprint.id | calc_prog }}%</span>
+                </li>
+                <li>
+                  <label for="endin">Ends in (days) : </label><span id="endin">{{ sprint.sprint_estm }}</span>
+                </li>
+                <li>
+                  <label for="rank">rank : </label><span id="progress">{{ sprint.sprint_rank }}</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li></li>
+                <li></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if sprintuser or taskuser or taskss %}
+        <div class="content">
+          <div class="box" box-data-id="{{'{{box.id}}'}}" style="--box-color:{{'{{box.color}}'}}"
+            ng-repeat="box in boxs" ng-click="{{'clickBox(box.id)'}}">
+            <p class="desc">{{ '{{box.desc}}' }}</p>
+            <h2 class="title">
+              {{ '{{box.name}}' }}
+            </h2>
+            <div class="details">
+              <div class="info">
+                <label for="endin">Ends in (days) : </label><span id="endin">{{ '{{box.estm}}' }}</span>
+              </div>
+              <div class="info">
+                <label for="rank">rank : </label><span id="rank">{{ '{{box.rank}}' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    <script>
+      var app = angular.module("task", []);
+      app.controller("task_ctrl", ($scope) => {
+        let boxs = document.querySelectorAll(".box");
+        $scope.closeTask = () => {
+        document.querySelector(".task-details").classList.remove("toggle");
+        document.querySelector('body').style.overflowY = 'auto';
+        window.scrollTo(scrollPos[0], scrollPos[1]);
+      };
+        {% if user %}
+        $scope.clickBox = (id) => {
+          window.location.href = `/teams/{{user.id}}/tasks/${id}`
+        }
+        {% endif %}
+        $scope.userClick = (id) => {
+          window.location.href = `/teams/sprints/${id}`
+        }
+        {% if sprint %}
+        $scope.delComment = (id) =>{
+            $.ajax(
+              {type : 'DELETE',
+              url : `/delcomment/${id}`,
+              success : (data,textStatus,xhr)=>{
+                if (textStatus = 'success'){
+                  $.post(
+            `/fetchcomment/${$scope.id}`,
+            { task_id: $scope.id })
+            .done((res) => {
+              $scope.task = res.ts;
+              $scope.data = res.coma;
+              $scope.$apply();
+            })
+                }
+              }
+            }
+
+            )
+          }
+        $scope.addComment = () => {
+          let comment = document.querySelector("#comment");
+
+          e = $scope.id;
+          if (comment != null && !isNaN(e)) {
+            $.post(
+              `/addcomment/${e}`,
+              { task_id: e, comment: comment.value }
+            )
+              .done((res) => {
+                comment.value = "";
+                $.post(
+                  `/fetchcomment/${e}`,
+                  { task_id: e }
+                )
+                  .done((res) => {
+                    $scope.task = res.ts;
+                    $scope.data = res.coma;
+                    $scope.$apply();
+                  })
+              })
+          }
+        }
+        $scope.clickBox = (e) => {
+          scrollPos = getScroll();
+          window.scrollTo(0, 0);
+          document.querySelector(".task-details").classList.add("toggle");
+          document.querySelector('body').style.overflowY = 'hidden';
+
+          $scope.id = e;
+          $.post(
+            `/fetchcomment/${e}`,
+            { task_id: e })
+            .done((res) => {
+              $scope.task = res.ts;
+              $scope.data = res.coma;
+              $scope.$apply();
+            })
+        }
+        $scope.getTasks = () => {
+          $.ajax({
+            url: '/get-tasks/{{ sprint.id }}/user/{{user.id}}',
+            type: 'POST',
+            success: (data, textStatus, xhr) => {
+              $scope.boxs = data.data;
+              $scope.$apply()
+            }
+          })
+        }
+        $scope.$on('$viewContentLoaded', $scope.getTasks());
+        {% endif %}
+
+      });
+
+
+    
+    </script>
+    <script>
+      document.querySelector("#logout").addEventListener("click", () => {
+        $.post("/logout").done((res) => {
+          window.location.href = "/";
+        });
+      });
+    </script>
+    {% elif login or signup %}
+    <div class="main login">
+      <div class="desc">
+        <h2>PFA GROUP 4 TRACKER</h2>
+        <p>
+          This tracker 'll allows you to truck groupe 4 progress to see working
+          on sprints and whats everyone has done.
+        </p>
+        {% if signup %}
+        <a href="/login" id="sig">Login</a>
+        {% endif %} {% if login %}
+        <a href="/signup" id="sig">Registry</a>
+        {% endif %}
+      </div>
+      <div class="sign">
+        <form action="">
+          {% if signup %}
+          <h2>SIGN UP</h2>
+          <input type="text" name="name" id="name" placeholder="Name" />
+          {% endif %} {% if login %}
+          <h2>SIGN IN</h2>
+          {% endif %}
+          <input type="email" name="email" id="email" placeholder="E-mail" />
+          <input type="password" name="password" id="password" placeholder="Password" />
+          <input type="button" value="{{btnText}}" id="submit" />
+        </form>
+      </div>
+    </div>
+    {% if signup %}
+    <script>
+      let submit = document.querySelector("#submit");
+      submit.addEventListener("click", (e) => {
+        let name = document.querySelector("#name").value;
+        let email = document.querySelector("#email").value;
+        let password = md5(document.querySelector("#password").value);
+        e.preventDefault();
+        $.post(
+          "/signup",
+          {
+            name: name,
+            email: email,
+            password: password,
+          },
+          () => { }
+        )
+          .done((res) => {
+            let title = document.querySelector(".sign h2");
+            title.innerHTML = res.ACCESS;
+            window.location.href = "http://localhost:8000";
+          })
+      });
+    </script>
+    {% elif login %}
+
+    <script>
+      let submit = document.querySelector("#submit");
+      submit.addEventListener("click", (e) => {
+        let email = document.querySelector("#email").value;
+        let password = md5(document.querySelector("#password").value);
+        e.preventDefault();
+        $.post(
+          "/login",
+          {
+            email: email,
+            password: password,
+          },
+          () => { }
+        )
+          .done((res) => {
+            let title = document.querySelector(".sign h2");
+            title.innerHTML = res.ACCESS;
+            window.location.href = "http://localhost:8000";
+          })
+      });
+    </script>
+
+    {% endif %}
+    {% elif data_type != 'user' and not login or signup%}
+
+    <section>
+      <nav>
+        <ul>
+          <a href="/">
+            <li>SPRINTS</li>
+          </a><a href="/teams">
+            <li>TEAMS</li>
+          </a><a href="https://github.com/AbdRahmenAmri/PFA" target="_blank">
+            <li>GITHUB</li>
+          </a>
+          <a>
+            <li id="logout">LOGOUT</li>
+          </a>
+        </ul>
+      </nav>
+      <div class="main">
+        <header>
+          <h1>{{data_type}}S</h1>
+          {% if isdev and data_type == 'task' %}<a id="delete_sprint">DELETE</a>{% endif %}
+        </header>
+        {% if data_type == "task" %}
+        <div class="task-details" data-task-id="{{'{{task.task_id}}'}}">
+          <span id="task-close"> X </span>
+          <h1>{{'{{task.task_name}}'}}</h1>
+          <p style="--box-color:{{'{{task.task_color}}'}}">
+            {{'{{task.task_desc}}'}}
+          </p>
+          <div class="details">
+            <label for="rank">Rank : </label><span id="rank">{{'{{task.task_rank}}'}}</span>
+            <label for="estm">Estimation (days) : </label><span id="owner">{{'{{task.task_estm}}'}}</span>
+            <label for="owner">Owner : </label><span id="owner">{{'{{task.task_owner}}'}}</span>
+            <label for="state">State : </label><span id="state">{{'{{task.task_state.text}}'}}</span>
+            <label for="created">Add At : </label><span id="created">{{'{{task.task_created_at}}'}}</span>
+            <label for="Started" ng-if="task.task_started">Started At : </label><span id="started"
+              ng-if="task.task_started">{{'{{task.task_started_at}}'}}</span>
+            <label for="finished" ng-if="task.task_finished">finished at: </label><span id="finished"
+              ng-if="task.task_finished">{{'{{task.task_finished_at}}'}}</span>
+          </div>
+          <div id="ctrlr" ng-if="task.is_owner == true">
+            <a id="deleteit" ng-click="deleteIt();">DELETE it</a>
+            <a ng-if="task.task_state.code == 0" id="takeit" ng-click="takeIt();">Take It</a>
+            <a ng-if="task.task_state.code == 1" id="finishit" ng-click="finishIt();">Finish it</a>
+          </div>
+          <div class="comments">
+            <div class="post">
+              <textarea name="comment" id="comment" placeholder="Comment here..."></textarea>
+              <a id="post" ng-click="addComment()">Post</a>
+            </div>
+            <div class="comment" ng-repeat="x in data">
+              <span id="del" ng-if="x.CanDel" ng-click="delComment(x.id_comment)">X</span>
+              <span id="poster">{{'{{x.poster}}'}}</span>
+              <span id="c-date">{{'{{x.post_date}}'}}</span>
+              <p id="c-body">{{'{{x.comment}}'}}</p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="contents">
+          {% if sprint %}
+          <div class="main-sprint" style="--box-color:{{sprint.id| clr('id')}}">
+            <div class="left">
+              <h1>{{ sprint.sprint_name }}</h1>
+              <p>{{ sprint.sprint_desc }}</p>
+            </div>
+            <div class="right">
+              <div>
+                <ul>
+                  <li>
+                    <label for="addat">ADD AT : </label><span id="addat">{{sprint.sprint_create_at|fdate}}</span>
+                  </li>
+                  <li>
+                    <label for="progress">progress : </label><span id="progress">{{ sprint.id | calc_prog }}%</span>
+                  </li>
+                  <li>
+                    <label for="endin">Ends in (days) : </label><span id="endin">{{ sprint.sprint_estm }}</span>
+                  </li>
+                  <li>
+                    <label for="rank">rank : </label><span id="progress">{{ sprint.sprint_rank }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <ul>
+                  <li></li>
+                  <li></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="content">
+            {% if isdev %}
+            <div class="box plus">
+              <span id="open">+</span>
+              <form action="" id="plus-form">
+                <span id="exit">X</span>
+                <fieldset>
+                  <legend>{{legend}}</legend>
+                  <span id="plus-msg"></span>
+                  <input type="text" name="fname" id="fname" placeholder="Name" /><textarea name="fdesc" id="fdesc"
+                    placeholder="Description"></textarea><input type="number" name="frank" id="frank"
+                    placeholder="Rank" /><input type="number" name="festm" id="festm"
+                    placeholder="Estimation (days)" /><input type="button" id="add" value="ADD" />
+                </fieldset>
+              </form>
+            </div>
+            {% endif %}
+            {% if data_type == 'sprint' %}
+            <div class="box" box-data-id="{{'{{box.id}}'}}" style="--box-color:{{'{{box.color}}'}}"
+              ng-repeat="box in boxs" ng-click="clickBox(box.id)">
+              <p class="desc">{{ '{{box.desc}}' }}</p>
+              <h2 class="title">
+                {{ '{{box.name}}' }}
+              </h2>
+              <div class="details">
+                <div class="info">
+                  <label for="progress">progress : </label><span id="progress">{{ '{{box.progress}}' }}%</span>
+                </div>
+                <div class="info">
+                  <label for="endin">Ends in (days) : </label><span id="endin">{{ '{{box.estm}}' }}</span>
+                </div>
+                <div class="info">
+                  <label for="rank">rank : </label><span id="rank">{{ '{{box.rank}}' }}</span>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% if data_type == 'task' %}
+            <div class="box" box-data-id="{{'{{box.id}}'}}" style="--box-color:{{'{{box.color}}'}}"
+              ng-repeat="box in boxs" ng-click="{{'clickBox(box.id)'}}">
+              <p class="desc">{{ '{{box.desc}}' }}</p>
+              <h2 class="title">
+                {{ '{{box.name}}' }}
+              </h2>
+              <div class="details">
+                <div class="info">
+                  <label for="endin">Ends in (days) : </label><span id="endin">{{ '{{box.estm}}' }}</span>
+                </div>
+                <div class="info">
+                  <label for="rank">rank : </label><span id="rank">{{ '{{box.rank}}' }}</span>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+    {% if isdev %}
+    <script>
+      add = document.querySelector("#open");
+      abdrahmen = document.querySelector(".plus");
+      add.addEventListener("click", (e) => {
+        abdrahmen.classList.toggle("toggle");
+        document.querySelector(".plus form").style.display = "grid";
+        document.querySelector(".plus #open").style.display = "none";
+      });
+      exit = document.querySelector("#exit");
+      exit.addEventListener("click", (e) => {
+        abdrahmen.classList.toggle("toggle");
+        document.querySelector(".plus #open").style.display = "block";
+        document.querySelector(".plus form").style.display = "none";
+      });
+    </script>
+    <script>
+      document.querySelector("#add").addEventListener("click", (e) => {
+        name = $("#fname").val();
+        desc = $("#fdesc").val();
+        estm = $("#festm").val();
+        rank = $("#frank").val();
+        $.post(
+          "{{add}}",
+          {
+            name: name,
+            desc: desc,
+            estm: estm,
+            rank: rank,
+          }
+        )
+          .done((res) => {
+            var scope = angular.element($("body")).scope();
+            {% if data_type == 'sprint' %}
+            scope.getSprints()
+            {% endif %}
+            {% if data_type == 'task' %}
+            scope.getTasks();
+            {% endif %}
+            document.querySelector('#plus-msg').innerHTML = "INSERTED";
+            $('#plus-form').trigger("reset");
+          })
+          .fail((err) => {
+            document.querySelector('#plus-msg').innerHTML = "INVALID INPUTS"
+          });
+      });
+    </script>
+    {% endif %}
+    {% if data_type == "sprint" %}
+    <script>
+
+      var app = angular.module("task", []);
+      app.controller("task_ctrl", ($scope) => {
+
+        $scope.clickBox = (e) => {
+          window.location.href = `http://localhost:8000/sprint/${e}`;
+        }
+
+        $scope.getSprints = () => {
+          $.ajax({
+            url: '/get-sprints',
+            type: 'POST',
+            success: (data, textStatus, xhr) => {
+              $scope.boxs = data.data;
+              $scope.$apply()
+            }
+          })
+        }
+        $scope.$on('$viewContentLoaded', $scope.getSprints());
+      })
+
+
+    </script>
+    {% endif %}
+    {% if data_type == "task" %}
+    <script>
+      var Counter = parseInt(0);
+      var c1 = "blue";
+      var c2 = "yellow";
+      var c3 = "red";
+      document.querySelector("#delete_sprint").addEventListener("click", () => {
+        if (Counter < 2) {
+          Counter++;
+          if (Counter == 1)
+            document.querySelector("#delete_sprint").style.backgroundColor = c1;
+          if (Counter == 2)
+            document.querySelector("#delete_sprint").style.backgroundColor = c2;
+        } else {
+          document.querySelector("#delete_sprint").style.backgroundColor = c3;
+          Counter = 0;
+          $.ajax({
+            url: "/sprint/{{sprint.id}}",
+            type: "DELETE",
+            success: function (data, textStatus, xhr) {
+              if (textStatus && data.SPRINT == "DELETED") {
+                window.location.href = "/";
+              }
+            },
+          });
+        }
+      });
+    </script>
+    {% if data_type != 'user' and not login and not signup%}
+    <script>
+      let boxs = document.querySelectorAll(".box");
+      let pbox = document.querySelector(".box.plus");
+      var app = angular.module("task", []);
+      app.controller("task_ctrl", ($scope) => {
+        $scope.delComment = (id) =>{
+            $.ajax(
+              {type : 'DELETE',
+              url : `/delcomment/${id}`,
+              success : (data,textStatus,xhr)=>{
+                if (textStatus = 'success'){
+                  $.post(
+            `/fetchcomment/${$scope.id}`,
+            { task_id: $scope.id })
+            .done((res) => {
+              $scope.task = res.ts;
+              $scope.data = res.coma;
+              $scope.$apply();
+            })
+                }
+              }
+            }
+
+            )
+          }
+        $scope.addComment = () => {
+          let comment = document.querySelector("#comment");
+          e = $scope.id;
+          if (comment != null && !isNaN(e)) {
+            $.post(
+              `/addcomment/${e}`,
+              { task_id: e, comment: comment.value }
+            )
+              .done((res) => {
+                comment.value = "";
+                $.post(
+                  `/fetchcomment/${e}`,
+                  { task_id: e }
+                )
+                  .done((res) => {
+                    $scope.task = res.ts;
+                    $scope.data = res.coma;
+                    $scope.$apply();
+                  })
+              })
+          }
+        }
+        $scope.clickBox = (e) => {
+          scrollPos = getScroll();
+          window.scrollTo(0, 0);
+          document.querySelector(".task-details").classList.add("toggle");
+          document.querySelector('body').style.overflowY = 'hidden';
+
+          $scope.id = e;
+          $.post(
+            `/fetchcomment/${e}`,
+            { task_id: e })
+            .done((res) => {
+              $scope.task = res.ts;
+              $scope.data = res.coma;
+              $scope.$apply();
+            })
+        }
+        $scope.getTasks = () => {
+          $.ajax({
+            url: '/get-tasks/{{ sprint.id }}',
+            type: 'POST',
+            success: (data, textStatus, xhr) => {
+              $scope.boxs = data.data;
+              $scope.$apply()
+            }
+          })
+        }
+        $scope.$on('$viewContentLoaded', $scope.getTasks());
+        $scope.deleteIt = () => {
+          id = document
+            .querySelector(".task-details")
+            .getAttribute("data-task-id");
+          $.ajax({
+            url: "/task/delete/" + id,
+            type: "DELETE",
+            success: (data, textStatus, xhr) => {
+              $scope.getTasks();
+              closeTask();
+            },
+          });
+        }
+        $scope.finishIt = () => {
+          id = document
+            .querySelector(".task-details")
+            .getAttribute("data-task-id");
+          $.ajax({
+            url: "/task/done/" + id,
+            type: "PUT",
+            success: (data, textStatus, xhr) => {
+              $.post(`/fetchcomment/${id}`, { task_id: id })
+                .done((res) => {
+                  $scope.task = res.ts;
+                  $scope.data = res.coma;
+                  $scope.$apply();
+                })
+            },
+          });
+        }
+        $scope.takeIt = () => {
+          id = document
+            .querySelector(".task-details")
+            .getAttribute("data-task-id");
+          $.ajax({
+            url: "/task/take/" + id,
+            type: "PUT",
+            success: (data, textStatus, xhr) => {
+              $.post(`/fetchcomment/${id}`, { task_id: id })
+                .done((res) => {
+                  $scope.task = res.ts;
+                  $scope.data = res.coma;
+                  $scope.$apply();
+                })
+            }
+          });
+        }
+      });
+      let t_close = document.querySelector("#task-close");
+      closeTask = () => {
+        document.querySelector(".task-details").classList.remove("toggle");
+        document.querySelector('body').style.overflowY = 'auto';
+        window.scrollTo(scrollPos[0], scrollPos[1]);
+      };
+      t_close.addEventListener('click', closeTask);
+
+
+
+    </script>
+
+    {% endif %}
+
+    {% endif %}
+
+    <script>
+      document.querySelector("#logout").addEventListener("click", () => {
+        $.post("/logout").done((res) => {
+          window.location.href = "/";
+        });
+      });
+    </script>
+
+    {% endif %}
+
+  </section>
+
+</body>
+
+</html>
